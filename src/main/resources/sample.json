@@ -1,0 +1,12 @@
+{
+  "survey": {
+       "questions": [
+         {
+           "question": "what is your fav city",
+           "answers": [
+             "mumbai", "frankfurt", "Nagpur", "Coimbatore"
+           ]
+         }
+       ]
+  }
+}
