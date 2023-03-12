@@ -1,7 +1,6 @@
-package com.mls.survey.demo;
+package com.mls.survey.demo.inmemory;
 
-import com.mls.survey.demo.inmemory.MapSupplierImpl;
-import com.mls.survey.demo.model.QuestionAnswerModel;
+import com.mls.survey.demo.model.QuestionsAnswerDataStructure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
@@ -9,25 +8,26 @@ import org.springframework.util.Assert;
 
 import java.text.DecimalFormat;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Set;
 
-class MapSupplierTest {
+class UserSurveyDataStoreTest {
 
-    private MapSupplierImpl mapSupplier;
+    private UserSurveyDataStoreMapImpl mapSupplier;
     @BeforeEach
     public void setUp(){
-        mapSupplier = new MapSupplierImpl();
+        mapSupplier = new UserSurveyDataStoreMapImpl(new HashMap<>());
     }
 
     @Test
-    public void testAddAnswer(){
-        mapSupplier.addAnswer("question 1",  "answer 1");
-        mapSupplier.addAnswer("question 2", "answer 2");
-        mapSupplier.addAnswer("question 1", "answer 1");
-        mapSupplier.addAnswer("question 2", "answer 3");
-        mapSupplier.addAnswer("question 1", "answer 1");
-        mapSupplier.addAnswer("question 2", "answer 2");
-        final QuestionAnswerModel<String, AbstractMap.SimpleEntry<String, Double>> surveyResultModel =  mapSupplier.surveyResult();
+    public void testAddAnswersAndSurveyResult(){
+        mapSupplier.captureUserAnswer("question 1",  "answer 1");
+        mapSupplier.captureUserAnswer("question 2", "answer 2");
+        mapSupplier.captureUserAnswer("question 1", "answer 1");
+        mapSupplier.captureUserAnswer("question 2", "answer 3");
+        mapSupplier.captureUserAnswer("question 1", "answer 1");
+        mapSupplier.captureUserAnswer("question 2", "answer 2");
+        final QuestionsAnswerDataStructure<String, AbstractMap.SimpleEntry<String, Double>> surveyResultModel =  mapSupplier.collectSurveyResultFromUserResponsesSoFar();
         Set<AbstractMap.SimpleEntry<String, Double> > answerDistribution = surveyResultModel.getSubmission().get("question 1");
         answerDistribution.forEach(entry -> {
             if(entry.getKey().equals("answer 1")){

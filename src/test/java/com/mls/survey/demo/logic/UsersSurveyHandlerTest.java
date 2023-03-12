@@ -1,27 +1,23 @@
-package com.mls.survey.demo;
+package com.mls.survey.demo.logic;
 
-import com.mls.survey.demo.logic.SurveyHandler;
-import com.mls.survey.demo.inmemory.MapSupplierImpl;
-import com.mls.survey.demo.model.QuestionAnswerModel;
+import com.mls.survey.demo.inmemory.UserSurveyDataStoreMapImpl;
+import com.mls.survey.demo.model.QuestionsAnswerDataStructure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
-public class SurveyHandlerTest {
+public class UsersSurveyHandlerTest {
 
-    private SurveyHandler surveyHandler;
+    private UsersSurveyHandler usersSurveyHandler;
     @BeforeEach
     public void setUp(){
-        surveyHandler = new SurveyHandler(new MapSupplierImpl());
+        usersSurveyHandler = new UsersSurveyHandler(new UserSurveyDataStoreMapImpl(new HashMap<>()));
     }
 
     @Test
-    public void testForHugeUserLoad(){
+    public void testAddAnswerAndSurveyResultFor1000Users(){
         int[][] qA = new int[5][4];
         final Random random = new Random();
         for(int i=0; i<1000; i++){
@@ -29,11 +25,11 @@ public class SurveyHandlerTest {
                 final int randInt = random.nextInt(4);
                 int ans = qA[j][randInt];
                 qA[j][randInt] = ++ans;
-                surveyHandler.add("q"+j, "a"+randInt);
+                usersSurveyHandler.addUserQAResponse("q"+j, "a"+randInt);
             }
         }
-        final QuestionAnswerModel<String, AbstractMap.SimpleEntry<String, Double>> surveyResult =
-                surveyHandler.surveyResultTillNow();
+        final QuestionsAnswerDataStructure<String, AbstractMap.SimpleEntry<String, Double>> surveyResult =
+                usersSurveyHandler.surveyResultOfAllUsersTillNow();
         final Map<String, Set<AbstractMap.SimpleEntry<String, Double>>> surveyResultMap =  surveyResult.getSubmission();
         for(int i=0; i<5; i++){
             final Set<AbstractMap.SimpleEntry<String, Double>> set = surveyResultMap.get("q"+i);

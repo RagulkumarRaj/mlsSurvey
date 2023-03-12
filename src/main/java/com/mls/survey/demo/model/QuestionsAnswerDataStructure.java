@@ -3,7 +3,7 @@ package com.mls.survey.demo.model;
 import java.util.Map;
 import java.util.Set;
 
-public class QuestionAnswerModel<T, U> {
+public class QuestionsAnswerDataStructure<T, U> {
     private Map<T, Set<U>> submission;
 
     public Map<T, Set<U>> getSubmission() {

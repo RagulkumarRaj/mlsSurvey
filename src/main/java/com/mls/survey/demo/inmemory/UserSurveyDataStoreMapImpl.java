@@ -1,6 +1,6 @@
 package com.mls.survey.demo.inmemory;
 
-import com.mls.survey.demo.model.QuestionAnswerModel;
+import com.mls.survey.demo.model.QuestionsAnswerDataStructure;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
@@ -9,14 +9,19 @@ import static java.util.AbstractMap.SimpleEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Profile("dev")
+@Profile({"dev", "integration"})
 @Configuration
-public class MapSupplierImpl implements MapSupplier {
-    private Map<String, ConcurrentMap<String, Long>> result = new ConcurrentHashMap<>();
+public class UserSurveyDataStoreMapImpl implements UserSurveyDataStore {
+
+    private final Map<String, ConcurrentMap<String, Long>> simpleMapDataStore;
+    public UserSurveyDataStoreMapImpl(final Map<String, ConcurrentMap<String, Long>> simpleMapDataStore){
+        this.simpleMapDataStore = simpleMapDataStore;
+    }
+
     @Override
-    public void addAnswer(final String question, final String answer) {
+    public void captureUserAnswer(final String question, final String answer) {
         final ConcurrentMap<String, Long> map =
-                result.computeIfAbsent(question, (k) -> {
+                simpleMapDataStore.computeIfAbsent(question, (k) -> {
                     final ConcurrentHashMap<String, Long> answerCountMap = new ConcurrentHashMap<String, Long>();
                     answerCountMap.put(answer, 0L);
                     return answerCountMap;
@@ -25,9 +30,9 @@ public class MapSupplierImpl implements MapSupplier {
     }
 
     @Override
-    public QuestionAnswerModel<String, SimpleEntry<String, Double>> surveyResult() {
+    public QuestionsAnswerDataStructure<String, SimpleEntry<String, Double>> collectSurveyResultFromUserResponsesSoFar() {
         final Map<String, Set<SimpleEntry<String, Double>>> resultCopy = new HashMap<>();
-        result.entrySet().forEach(e -> {
+        simpleMapDataStore.entrySet().forEach(e -> {
             final ConcurrentMap<String, Long> value =  e.getValue();
             final Long totalVotes = value.values().stream().reduce(Long::sum).orElse(0L);
             final Set<SimpleEntry<String, Double>> set = new HashSet<>();
@@ -36,8 +41,8 @@ public class MapSupplierImpl implements MapSupplier {
             });
             resultCopy.put(e.getKey(), set);
         });
-        final QuestionAnswerModel<String, SimpleEntry<String, Double>> answer =
-                new QuestionAnswerModel<>();
+        final QuestionsAnswerDataStructure<String, SimpleEntry<String, Double>> answer =
+                new QuestionsAnswerDataStructure<>();
         answer.setSubmission(resultCopy);
         return answer;
     }

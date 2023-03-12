@@ -2,7 +2,7 @@ package com.mls.survey.demo.model;
 
 public class UserSurveySubmission {
     private String userId;
-    private QuestionAnswerModel<String, String> questionAnswerModel;
+    private QuestionsAnswerDataStructure<String, String> questionsAnswerDataStructure;
 
     public String getUserId() {
         return userId;
@@ -12,11 +12,11 @@ public class UserSurveySubmission {
         this.userId = userId;
     }
 
-    public QuestionAnswerModel getQuestionAnswerModel() {
-        return questionAnswerModel;
+    public QuestionsAnswerDataStructure getQuestionAnswerModel() {
+        return questionsAnswerDataStructure;
     }
 
-    public void setQuestionAnswerModel(final QuestionAnswerModel questionAnswerModel) {
-        this.questionAnswerModel = questionAnswerModel;
+    public void setQuestionAnswerModel(final QuestionsAnswerDataStructure questionsAnswerDataStructure) {
+        this.questionsAnswerDataStructure = questionsAnswerDataStructure;
     }
 }
