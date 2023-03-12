@@ -3,12 +3,13 @@ package com.mls.survey.demo.controller;
 import com.mls.survey.demo.logic.UsersSurveyHandler;
 import com.mls.survey.demo.model.QuestionsAnswerDataStructure;
 import com.mls.survey.demo.model.UserSurveySubmission;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.AbstractMap;
-
 @RestController
+@RequestMapping("/survey")
 public class UserSurveyController {
     private final UsersSurveyHandler usersSurveyHandler;
 
@@ -16,26 +17,27 @@ public class UserSurveyController {
         this.usersSurveyHandler = usersSurveyHandler;
     }
 
-    @GetMapping(path="/survey/result",
+    @GetMapping(path="/result",
             produces = MediaType.APPLICATION_JSON_VALUE)
-     public QuestionsAnswerDataStructure<String, AbstractMap.SimpleEntry<String, Double>> surveyResultGet(){
-        return usersSurveyHandler.surveyResultOfAllUsersTillNow();
+     public ResponseEntity surveyResultGet(){
+        return ResponseEntity.ok(usersSurveyHandler.surveyResultOfAllUsersTillNow());
     }
 
-    @PostMapping(path = "/survey/questions/upload",
+    @PostMapping(path = "/questions/upload",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public String surveyQuestionsUploadPost(@RequestBody final QuestionsAnswerDataStructure<String, String> questionsAnswerDataStructure){
+    public ResponseEntity surveyQuestionsUploadPost(
+            @RequestBody final QuestionsAnswerDataStructure<String, String> questionsAnswerDataStructure){
         usersSurveyHandler.addAllQuestionsAndPossibleAnswers(questionsAnswerDataStructure);
-        return "Success";
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PostMapping(path = "/survey/submit",
+    @PostMapping(path = "/submit",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public String surveySubmit(@RequestBody final UserSurveySubmission userSurveySubmission){
+    public ResponseEntity surveySubmit(@RequestBody final UserSurveySubmission userSurveySubmission){
          usersSurveyHandler.captureQASubmissionOfUser(userSurveySubmission.getUserId(),
                  userSurveySubmission.getQuestionAnswerModel());
-        return "Success";
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
