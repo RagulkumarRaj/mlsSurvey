@@ -18,13 +18,15 @@ public class UsersSurveyHandlerTest {
 
     @Test
     public void testAddAnswerAndSurveyResultFor1000Users(){
-        int[][] qA = new int[5][4];
+        //userQuestionAnswerResponseArray contains the 1000 users answers for all questions. This array acts as a
+        // source of truth for the test cases
+        final int[][] userQuestionAnswerResponseArray = new int[5][4];
         final Random random = new Random();
         for(int i=0; i<1000; i++){
-            for(int j=0; j<qA.length; j++){
+            for(int j=0; j<userQuestionAnswerResponseArray.length; j++){
                 final int randInt = random.nextInt(4);
-                int ans = qA[j][randInt];
-                qA[j][randInt] = ++ans;
+                int ans = userQuestionAnswerResponseArray[j][randInt];
+                userQuestionAnswerResponseArray[j][randInt] = ++ans;
                 usersSurveyHandler.addUserQAResponse("q"+j, "a"+randInt);
             }
         }
@@ -36,7 +38,7 @@ public class UsersSurveyHandlerTest {
             for(AbstractMap.SimpleEntry<String, Double> entry : set){
                 for(int j=0; j<4; j++){
                     if(("a"+j).equals(entry.getKey())){
-                        Assert.state(entry.getValue() == (qA[i][j] * 100D)/1000, "Answer distribution percentage matches");
+                        Assert.state(entry.getValue() == (userQuestionAnswerResponseArray[i][j] * 100D)/1000, "Answer distribution percentage matches");
                     }
                 }
             }
