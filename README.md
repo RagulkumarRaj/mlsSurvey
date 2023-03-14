@@ -6,7 +6,9 @@ Add -Dspring.profiles.active=dev in vm options while running from intellij
 mvn spring-boot:run -Dspring-boot.run.profiles=dev from command line
 
 Sample requests
+
 To Upload questions
+
 curl --location --request POST 'localhost:8080/survey/questions/upload' \
  --header 'Content-Type: application/json' \
  --data-raw '{
@@ -17,6 +19,7 @@ curl --location --request POST 'localhost:8080/survey/questions/upload' \
 '
 
 To submit a survey
+
 curl --location --request POST 'localhost:8080/survey/submit' \
  --header 'Content-Type: application/json' \
  --data-raw '{
@@ -27,8 +30,11 @@ curl --location --request POST 'localhost:8080/survey/submit' \
        }
     }
 }'
+
 To get survey result
+
 curl --location --request GET 'localhost:8080/survey/result'
+
 
 Features.
 Create a survey with multiple-choice questions - > localhost:8080/survey/questions/upload
