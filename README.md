@@ -42,8 +42,7 @@ Answer a survey’s questions -> localhost:8080/survey/submit
 Get the relative distribution of a selected answer by question -> localhost:8080/survey/result
 
 Currently Using a concurrent hashmap as a data store to store user responses
-Better to use a service like aerospike to handle concurrent users, and also with Aerospike, 
-it is easier to replicate the application on multiple pods
+With aerospike, we can scale the application more.
 
 
 
